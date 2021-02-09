@@ -39,10 +39,28 @@ class BottomRow(FloatLayout):
     def __init__(self):
         super().__init__()
         self.shop_button = Button(text='Shop', size_hint=(0.2, 1), pos_hint={'center_x': 0.9, 'center_y': 0.5})
+        self.shop_button.bind(on_press=self.to_shop)
         self.bottom_label = Label(text='Bottom Label', size_hint=(0.8, 1), pos_hint={'center_x': 0.4, 'center_y': 0.5})
 
         self.add_widget(self.shop_button)
         self.add_widget(self.bottom_label)
+
+    def to_shop(self, item):
+        myapp.screen_manager.transition = SlideTransition(direction='left')
+        myapp.screen_manager.current = 'shop_screen'
+
+
+class ShopPage(BoxLayout):
+    def __init__(self):
+        super().__init__()
+        self.back_button = Button(text='Back', size_hint=(1, 0.2))
+        self.back_button.bind(on_press=self.to_start)
+
+        self.add_widget(self.back_button)
+
+    def to_start(self, item):
+        myapp.screen_manager.transition = SlideTransition(direction='right')
+        myapp.screen_manager.current = 'first_screen'
 
 
 class MainApp(App):
@@ -54,8 +72,13 @@ class MainApp(App):
         screen_one.add_widget(self.first_page)
         self.screen_manager.add_widget(screen_one)
 
+        self.shop_page = ShopPage()
+        screen_shop = Screen(name='shop_screen')
+        screen_shop.add_widget(self.shop_page)
+        self.screen_manager.add_widget(screen_shop)
+
         return self.screen_manager
 
 
-if __name__ == '__main__':
-    MainApp().run()
+myapp = MainApp()
+myapp.run()
